@@ -1,0 +1,14 @@
+[package]
+name = "wg_activity_notify_daemon"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pretty_env_logger = "0.4.0"
+log = "^0.4"
+tracing = "^0.1"
+tracing-subscriber = "^0.2"
+tracing-log = "^0.1"
+wg_activity_notify_core = { path = "../core" }

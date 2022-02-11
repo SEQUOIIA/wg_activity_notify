@@ -1,0 +1,13 @@
+update_interval: 5
+log_level: trace
+notification_providers:
+  discord:
+    webhook_url: https://canary.discord.com/api/webhooks/1/0
+    enable: false
+  pushover:
+    enable: false
+    priority: 1
+    api_key: key
+    device_key: device_key
+friendly_names:
+  QXNodG9uIFNoZXJ5bCBNb3JzZQ==: "My laptop""
