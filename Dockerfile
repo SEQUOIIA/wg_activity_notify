@@ -23,7 +23,7 @@ COPY --from=cacher $CARGO_HOME $CARGO_HOME
 RUN cargo build --release
 
 FROM debian:bullseye-slim
-RUN apt update && apt install -y --no-install-recommends wireguard-tools iptables net-tools && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y --no-install-recommends wireguard-tools iptables net-tools ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
 COPY ./config.yml.example /app/config.yml
 COPY --from=builder /app/target/release/wg_activity_notify_daemon /app
 WORKDIR /app
