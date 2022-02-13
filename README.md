@@ -4,6 +4,14 @@
 
 Keep track of when clients connect as well as disconnect from your Wireguard server. Optionally send a notification to one or more destination when this happens.
 
+- [Supported notification providers](#supported-notification-providers)
+- [Installation](#installation)
+  - [Docker](#docker)
+    - [Docker run](#docker-run)
+    - [Docker-compose](#docker-compose)
+  - [Binary](#binary)
+- [Missing features](#missing-features)
+
 ## Supported notification providers
 
 Currently these providers can be used:
