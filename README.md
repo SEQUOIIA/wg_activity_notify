@@ -1,6 +1,6 @@
 # wg_activity_notify
 
-![release](https://github.com/sequoiia/wg_activity_notify/actions/workflows/release.yml/badge.svg) ![release](https://github.com/sequoiia/wg_activity_notify/actions/workflows/tagged-release.yml/badge.svg)
+![badge](https://badges.fyi/github/latest-release/sequoiia/wg_activity_notify) ![badge](https://badges.fyi/github/license/sequoiia/wg_activity_notify) [![badge](https://img.shields.io/badge/Docker-Latest%20image-blue)](https://hub.docker.com/repository/docker/sequoiia/wg_activity_notify) [![badge](https://github.com/sequoiia/wg_activity_notify/actions/workflows/release.yml/badge.svg)](https://github.com/SEQUOIIA/wg_activity_notify/actions/workflows/release.yml) [![badge](https://github.com/sequoiia/wg_activity_notify/actions/workflows/tagged-release.yml/badge.svg)](https://github.com/SEQUOIIA/wg_activity_notify/actions/workflows/tagged-release.yml)
 
 Keep track of when clients connect as well as disconnect from your Wireguard server. Optionally send a notification to one or more destination when this happens.
 
