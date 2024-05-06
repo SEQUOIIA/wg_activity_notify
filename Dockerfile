@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=rust:1.78.0-slim-buster
+ARG BASE_IMAGE=rust:1.78.0-slim-bookworm
 
 FROM $BASE_IMAGE as planner
 WORKDIR app
