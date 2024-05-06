@@ -78,6 +78,14 @@ pub fn parse_dump(data : String) -> Vec<WgEntry> {
                     }
                 };
 
+                let persistent_keepalive = {
+                  if splits[8].eq("off") {
+                      0
+                  } else {
+                      splits[8].parse::<u64>().unwrap()
+                  }
+                };
+
                 let entry = WgEntry::Client(ClientData {
                     interface: splits[0].clone(),
                     public_key: splits[1].clone(),
@@ -87,7 +95,7 @@ pub fn parse_dump(data : String) -> Vec<WgEntry> {
                     latest_handshake: splits[5].parse::<u64>().unwrap(),
                     transfer_rx: splits[6].parse::<i64>().unwrap(),
                     transfer_tx: splits[7].parse::<i64>().unwrap(),
-                    persistent_keepalive: splits[8].parse::<u64>().unwrap()
+                    persistent_keepalive
                 });
                 payload.push(entry);
             },
