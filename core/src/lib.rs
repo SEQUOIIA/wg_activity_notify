@@ -104,7 +104,9 @@ impl Daemon {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is true & the previous status is not
                             let msg = format!("Client {} using endpoint {} has disconnected", friendly_name, data.endpoint.clone().unwrap_or("?".to_owned()));
                             info!("{}", msg);
-                            self.send_notification(NotificationData { msg, event: Event::Disconnect });
+                            if !self.conf.ignore_ipv4s.contains(&data.endpoint.clone().unwrap_or("".to_owned())) {
+                                self.send_notification(NotificationData { msg, event: Event::Disconnect });
+                            }
                         }
                     }
                 } else {
@@ -112,7 +114,9 @@ impl Daemon {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is false & the previous status is not
                             let msg = format!("Client {} using endpoint {} has connected", friendly_name, data.endpoint.clone().unwrap_or("?".to_owned()));
                             info!("{}", msg);
-                            self.send_notification(NotificationData { msg, event: Event::Connect });
+                            if !self.conf.ignore_ipv4s.contains(&data.endpoint.clone().unwrap_or("".to_owned())) {
+                                self.send_notification(NotificationData { msg, event: Event::Connect });
+                            }
                         }
                     }
                 }
