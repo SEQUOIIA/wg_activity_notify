@@ -1,15 +1,15 @@
-ARG BASE_IMAGE=rust:1.78.0-slim-bookworm
+ARG BASE_IMAGE=rust:1.91
 
 FROM $BASE_IMAGE as planner
 WORKDIR app
-RUN cargo install cargo-chef --version 0.1.33
+RUN cargo install cargo-chef --version 0.1.73
 COPY . .
 RUN cargo chef prepare  --recipe-path recipe.json
 
 FROM $BASE_IMAGE as cacher
 WORKDIR app
 RUN apt update && apt install -y ca-certificates wget gcc libssl-dev libc6-dev pkg-config
-RUN cargo install cargo-chef --version 0.1.33
+RUN cargo install cargo-chef --version 0.1.73
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 
