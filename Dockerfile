@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=rust:1.91
+ARG BASE_IMAGE=rust:1.91-bullseye
 
 FROM $BASE_IMAGE as planner
 WORKDIR app
