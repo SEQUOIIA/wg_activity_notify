@@ -11,3 +11,6 @@ notification_providers:
     device_key: device_key
 friendly_names:
   QXNodG9uIFNoZXJ5bCBNb3JzZQ==: "My laptop"
+ignored_subnets:
+  - 192.168.1.0/24
+  - 2a05:f6c7:3273:ffff:51cc:b861:9c99:cb48/64

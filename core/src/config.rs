@@ -3,6 +3,7 @@ use std::io::{Error, Read};
 use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
 use thiserror::Error;
+use ipnet::IpNet;
 
 #[derive(Serialize, Deserialize, Clone, Debug, Default)]
 pub struct Config {
@@ -10,8 +11,8 @@ pub struct Config {
     pub notification_providers : std::collections::HashMap<String, serde_yaml::Value>,
     #[serde(default = "default_friendly_names")]
     pub friendly_names : std::collections::HashMap<String, String>,
-    #[serde(default = "default_ignore_ipv4s")]
-    pub ignore_ipv4s : Vec<String>,
+    #[serde(default = "default_ignored_subnets")]
+    pub ignored_subnets : Vec<IpNet>,
     #[serde(default = "default_update_interval")]
     pub update_interval : u64,
     #[serde(default = "default_log_level")]
@@ -50,7 +51,7 @@ fn default_log_level() -> String {
     "info".to_owned()
 }
 
-fn default_ignore_ipv4s() -> Vec<String> {Vec::new()}
+fn default_ignored_subnets() -> Vec<IpNet> {Vec::new()}
 
 
 fn default_update_interval() -> u64 { 5 }

@@ -8,6 +8,7 @@ use crate::config::{Config, ConfigError};
 use crate::notifications::{Event, init_providers, init_providers_map, NotificationData, ProviderError};
 use crate::wg::{get_dump, WgEntry, WgError};
 use error::Error;
+use std::net::SocketAddr;
 
 pub mod config;
 pub mod wg;
@@ -87,6 +88,16 @@ impl Daemon {
         Err(Error::UnableToGetStatusOfEntry())
     }
 
+    fn should_ignore(&self, endpoint: &Option<String>) -> bool {
+        if let Some(ep) = endpoint {
+            if let Ok(addr) = ep.parse::<SocketAddr>() {
+                let ip = addr.ip();
+                return self.conf.ignored_subnets.iter().any(|subnet| subnet.contains(&ip));
+            }
+        }
+        false
+    }
+
     fn run_int(&mut self) {
         debug!("Checking WireGuard clients");
 
@@ -104,7 +115,7 @@ impl Daemon {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is true & the previous status is not
                             let msg = format!("Client {} using endpoint {} has disconnected", friendly_name, data.endpoint.clone().unwrap_or("?".to_owned()));
                             info!("{}", msg);
-                            if !self.conf.ignore_ipv4s.iter().any(|ip| data.endpoint.clone().unwrap_or("".to_owned()).contains(ip.as_str())) {
+                            if !self.should_ignore(&data.endpoint) {
                                 self.send_notification(NotificationData { msg, event: Event::Disconnect });
                             }
                         }
@@ -114,7 +125,7 @@ impl Daemon {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is false & the previous status is not
                             let msg = format!("Client {} using endpoint {} has connected", friendly_name, data.endpoint.clone().unwrap_or("?".to_owned()));
                             info!("{}", msg);
-                            if !self.conf.ignore_ipv4s.iter().any(|ip| data.endpoint.clone().unwrap_or("".to_owned()).contains(ip.as_str())) {
+                            if !self.should_ignore(&data.endpoint) {
                                 self.send_notification(NotificationData { msg, event: Event::Connect });
                             }
                         }
