@@ -128,7 +128,7 @@ impl Daemon {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is true & the previous status is not
                             let msg = format!("Client {} using endpoint {} has disconnected", friendly_name, data_ip);
                             info!("{}", msg);
-                            if !self.should_ignore(&data.endpoint) {
+                            if !self.should_ignore(&Some(data_ip.clone())) {
                                 self.send_notification(NotificationData { msg, event: Event::Disconnect });
                             }
                         }
@@ -138,7 +138,7 @@ impl Daemon {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is false & the previous status is not
                             let msg = format!("Client {} using endpoint {} has connected", friendly_name, data_ip);
                             info!("{}", msg);
-                            if !self.should_ignore(&data.endpoint) {
+                            if !self.should_ignore(&Some(data_ip.clone())) {
                                 self.send_notification(NotificationData { msg, event: Event::Connect });
                             }
                         }
