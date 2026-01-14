@@ -18,6 +18,7 @@ pub mod error;
 pub struct Daemon {
     entries : HashMap<String, WgEntry>,
     last_handshake: HashMap<String, u64>,
+    last_known_endpoint: HashMap<String, String>,
     status: HashMap<String, Status>,
     conf : Config
 }
@@ -32,6 +33,7 @@ impl Daemon {
         Self {
             entries: HashMap::new(),
             last_handshake: HashMap::new(),
+            last_known_endpoint: HashMap::new(),
             status: HashMap::new(),
             conf,
         }
@@ -106,6 +108,17 @@ impl Daemon {
             if let WgEntry::Client(data) = entry {
                 self.entries.insert(data.public_key.clone(), entry.clone());
 
+                let mut data_ip = "?".to_owned();
+
+                if let Some(endpoint) = &data.endpoint {
+                    self.last_known_endpoint.insert(data.public_key.clone(), endpoint.clone());
+                    data_ip = endpoint.clone();
+                } else {
+                    if let Some (endpoint) = self.last_known_endpoint.get(&data.public_key) {
+                        data_ip = endpoint.clone();
+                    }
+                }
+
                 let current_status = self.status_of_entry(entry).unwrap();
                 let previous_status = self.status.get(&data.public_key);
                 let friendly_name = self.get_friendly_name(&data.public_key);
@@ -113,7 +126,7 @@ impl Daemon {
                 if current_status.is_disconnected {
                     if let Some(s) = previous_status {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is true & the previous status is not
-                            let msg = format!("Client {} using endpoint {} has disconnected", friendly_name, data.endpoint.clone().unwrap_or("?".to_owned()));
+                            let msg = format!("Client {} using endpoint {} has disconnected", friendly_name, data_ip);
                             info!("{}", msg);
                             if !self.should_ignore(&data.endpoint) {
                                 self.send_notification(NotificationData { msg, event: Event::Disconnect });
@@ -123,7 +136,7 @@ impl Daemon {
                 } else {
                     if let Some(s) = previous_status {
                         if current_status.is_disconnected != s.is_disconnected { // Reached if current is_disconnected is false & the previous status is not
-                            let msg = format!("Client {} using endpoint {} has connected", friendly_name, data.endpoint.clone().unwrap_or("?".to_owned()));
+                            let msg = format!("Client {} using endpoint {} has connected", friendly_name, data_ip);
                             info!("{}", msg);
                             if !self.should_ignore(&data.endpoint) {
                                 self.send_notification(NotificationData { msg, event: Event::Connect });
